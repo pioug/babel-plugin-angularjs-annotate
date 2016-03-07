@@ -272,13 +272,15 @@ function matchInjectorInvoke(node) {
 function matchHttpProvider(node) {
     // $httpProvider.interceptors.push(function($scope) {});
     // $httpProvider.responseInterceptors.push(function($scope) {});
+    // $httpProvider.interceptors.unshift(function($scope) {});
+    // $httpProvider.responseInterceptors.unshift(function($scope) {});
 
     // we already know that node is a (non-computed) method call
     const callee = node.callee;
     const obj = callee.object; // identifier or expression
     const method = callee.property; // identifier
 
-    return (method.name === "push" &&
+    return ((method.name === "push" || method.name === "unshift") &&
         obj.type === "MemberExpression" && !obj.computed &&
         obj.object.name === "$httpProvider" && is.someof(obj.property.name,  ["interceptors", "responseInterceptors"]) &&
         node.arguments.length >= 1 && node.arguments);

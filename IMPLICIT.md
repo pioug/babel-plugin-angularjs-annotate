@@ -53,7 +53,9 @@ ng-annotate understands `$routeProvider.when("path", { .. })`.
 ng-annotate understands `$controllerProvider.register("foo", function($scope) ..)`.
 
 ng-annotate understands `$httpProvider.interceptors.push(function($scope) ..)` and
-`$httpProvider.responseInterceptors.push(function($scope) ..)`.
+`$httpProvider.responseInterceptors.push(function($scope) ..)` and
+`$httpProvider.interceptors.unshift(function($scope) ..)` and
+`$httpProvider.responseInterceptors.unshift(function($scope) ..)`.
 
 ng-annotate understands `$injector.invoke(function ..)`.
 
