@@ -1076,6 +1076,7 @@ module.exports = function ngAnnotate(src, options) {
         // acorn
         ast = parser(src, {
             ecmaVersion: 6,
+            allowImportExportEverywhere: true,
             allowReserved: true,
             locations: true,
             ranges: true,
