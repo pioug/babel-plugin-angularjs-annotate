@@ -796,7 +796,7 @@ function judgeInjectArraySuspect(node, ctx) {
     const isSemicolonTerminated = (ctx.src[insertPos.pos - 1] === ";");
 
     node = jumpOverIife(node);
-
+    
     if (ctx.isFunctionExpressionWithArgs(node)) {
         // var x = 1, y = function(a,b) {}, z;
 
@@ -812,6 +812,14 @@ function judgeInjectArraySuspect(node, ctx) {
     } else if (ctx.isFunctionDeclarationWithArgs(node)) {
         // /*@ngInject*/ function foo($scope) {}
 
+        addRemoveInjectArray(
+            node.params,
+            insertPos,
+            node.id.name);
+
+    } else if (node.type === "ExportDefaultDeclaration") {
+    	node = node.declaration;
+        // /*@ngInject*/ foo.bar[0] = function($scope) {}
         addRemoveInjectArray(
             node.params,
             insertPos,
@@ -879,7 +887,7 @@ function judgeInjectArraySuspect(node, ctx) {
             }
         });
         assert(foundSuspectInBody);
-        if (onode.type === "FunctionDeclaration") {
+        if (onode.type === "FunctionDeclaration" || onode.type === "ExportDefaultDeclaration") {
             if (!nodeAfterExtends) {
                 nodeAfterExtends = firstNonPrologueStatement(onode.$parent.body);
             }
@@ -1076,7 +1084,7 @@ module.exports = function ngAnnotate(src, options) {
         // acorn
         ast = parser(src, {
             ecmaVersion: 6,
-            allowImportExportEverywhere: true,
+			allowImportExportEverywhere: true,
             allowReserved: true,
             locations: true,
             ranges: true,
