@@ -705,7 +705,7 @@ function followReference(node) {
         // {type: "VariableDeclarator", id: {type: "Identifier", name: "foo"}, init: ..}
         return parent;
     } else if (kind === "fun") {
-        assert(ptype === "FunctionDeclaration" || ptype === "FunctionExpression")
+        assert(ptype === "FunctionDeclaration" || ptype === "FunctionExpression" || ptype === "ArrowFunctionExpression")
         // FunctionDeclaration is the common case, i.e.
         // function foo(a, b) {}
 
@@ -958,11 +958,10 @@ function judgeInjectArraySuspect(node, ctx) {
 }
 
 function jumpOverIife(node) {
-    let outerfn;
-    if (!(node.type === "CallExpression" && (outerfn = node.callee).type === "FunctionExpression")) {
+    const outerfn = node.callee
+    if (!(node.type === "CallExpression" && (outerfn.type === "FunctionExpression" || outerfn.type === "ArrowFunctionExpression"))) {
         return node;
     }
-
     const outerbody = outerfn.body.body;
     for (let i = 0; i < outerbody.length; i++) {
         const statement = outerbody[i];
@@ -988,9 +987,10 @@ function isAnnotatedArray(node) {
         return false;
     }
     const elements = node.elements;
+    const lastElement = last(elements);
 
     // last should be a function expression
-    if (elements.length === 0 || last(elements).type !== "FunctionExpression") {
+    if (elements.length === 0 || (lastElement.type !== "FunctionExpression" && lastElement.type !== "ArrowFunctionExpression")) {
         return false;
     }
 
@@ -1005,7 +1005,7 @@ function isAnnotatedArray(node) {
     return true;
 }
 function isFunctionExpressionWithArgs(node) {
-    return node.type === "FunctionExpression" && node.params.length >= 1;
+    return (node.type === "FunctionExpression" || node.type === "ArrowFunctionExpression") && node.params.length >= 1;
 }
 function isFunctionDeclarationWithArgs(node) {
     return node.type === "FunctionDeclaration" && node.params.length >= 1;
