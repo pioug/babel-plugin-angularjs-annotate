@@ -126,6 +126,11 @@ function run(ngAnnotate) {
     console.log("testing removing existing $inject annotations");
     test(slurp("tests/has_inject_removed.js"), ngAnnotate(slurp("tests/has_inject.js"), {remove: true}).src);
 
+    console.log("testing es6");
+    const original_wrapped = slurp("tests/es6.original.js");
+    const annotated_wrapper = ngAnnotate(original_wrapped, {add: true, es6: true}).src;
+    test(slurp("tests/es6.annotated.js"), annotated_wrapper, "es6.original.js");
+
     console.log("testing sourcemaps");
     const originalSourcemaps = slurp("tests/sourcemaps.coffee");
     const compiledSourcemaps = coffee.compile(originalSourcemaps, { sourceFiles: ["sourcemaps.coffee"], generatedFile: "sourcemaps.js", sourceMap: true });

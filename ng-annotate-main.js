@@ -1051,6 +1051,7 @@ module.exports = function ngAnnotate(src, options) {
 
     const quot = options.single_quotes ? "'" : '"';
     const re = (options.regexp ? new RegExp(options.regexp) : /^[a-zA-Z0-9_\$\.\s]+$/);
+    const es6 = options.es6 ? options.es6 : false;
     const rename = new stringmap();
     if (options.rename) {
         options.rename.forEach(function(value) {
@@ -1080,6 +1081,7 @@ module.exports = function ngAnnotate(src, options) {
             locations: true,
             ranges: true,
             onComment: comments,
+            sourceType: es6 ? "module" : "script",
         });
         stats.parser_parse_t1 = Date.now();
     } catch(e) {
