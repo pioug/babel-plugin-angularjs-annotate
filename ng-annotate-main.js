@@ -817,6 +817,14 @@ function judgeInjectArraySuspect(node, ctx) {
             insertPos,
             node.id.name);
 
+    } else if (node.type === "ExportDefaultDeclaration") {
+        node = node.declaration;
+        // /*@ngInject*/ foo.bar[0] = function($scope) {}
+        addRemoveInjectArray(
+            node.params,
+            insertPos,
+            node.id.name);
+
     } else if (node.type === "ExpressionStatement" && node.expression.type === "AssignmentExpression" &&
         ctx.isFunctionExpressionWithArgs(node.expression.right)) {
         // /*@ngInject*/ foo.bar[0] = function($scope) {}
@@ -879,7 +887,7 @@ function judgeInjectArraySuspect(node, ctx) {
             }
         });
         assert(foundSuspectInBody);
-        if (onode.type === "FunctionDeclaration") {
+        if (onode.type === "FunctionDeclaration" || onode.type === "ExportDefaultDeclaration") {
             if (!nodeAfterExtends) {
                 nodeAfterExtends = firstNonPrologueStatement(onode.$parent.body);
             }
@@ -1077,6 +1085,7 @@ module.exports = function ngAnnotate(src, options) {
         // acorn
         ast = parser(src, {
             ecmaVersion: 6,
+            allowImportExportEverywhere: true,
             allowReserved: true,
             locations: true,
             ranges: true,
