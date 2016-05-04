@@ -1,3 +1,11 @@
+## v1.3.0 2016-05-04
+ * improve ES6 support
+  * https://github.com/olov/ng-annotate/pull/238
+  * https://github.com/olov/ng-annotate/pull/240
+  * https://github.com/olov/ng-annotate/pull/241
+ * fix HttpInterceptor annotation
+  * https://github.com/olov/ng-annotate/pull/236
+
 ## v1.2.1 2016-01-10
  * bugfix case where $inject arrays were incorrectly hoisted
  * angular-dashboard-framework optional: match apply
