@@ -268,6 +268,8 @@ angular.module("MyMod").directive("pleasematchthis", function() {
     // $httpProvider
     $httpProvider.interceptors.push(function($scope) { a });
     $httpProvider.responseInterceptors.push(function($scope) { a }, function(a, b) { b }, function() { c });
+    $httpProvider.interceptors.unshift(function($scope) { a });
+    $httpProvider.responseInterceptors.unshift(function($scope) { a }, function(a, b) { b }, function() { c });
 
     // $routeProvider
     $routeProvider.when("path", {
@@ -454,6 +456,8 @@ foobar.irrespective("dontmatchthis", function() {
     // $httpProvider
     $httpProvider.interceptors.push(function($scope) { a });
     $httpProvider.responseInterceptors.push(function($scope) { a }, function(a, b) { b }, function() { c });
+    $httpProvider.interceptors.unshift(function($scope) { a });
+    $httpProvider.responseInterceptors.unshift(function($scope) { a }, function(a, b) { b }, function() { c });
 
     // $routeProvider
     $routeProvider.when("path", {
