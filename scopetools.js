@@ -34,8 +34,17 @@ function createScopes(node, parent) {
     } else if (node.type === "VariableDeclaration") {
         // Variable declarations names goes in current scope
         node.declarations.forEach(function(declarator) {
-            const name = declarator.id.name;
-            node.$scope.add(name, node.kind, declarator.id, declarator.range[1]);
+            // Destructuring es6
+            if(declarator.id.properties) {
+                declarator.id.properties.forEach(function(destructuredDeclarator) {
+                    const destructVarName = destructuredDeclarator.value.name;
+                    node.$scope.add(destructVarName, node.kind, destructuredDeclarator, destructuredDeclarator.range[1]);
+                });
+            // Normal variable declaration
+            } else {
+                const variableName = declarator.id.name;
+                node.$scope.add(variableName, node.kind, declarator.id, declarator.range[1]);
+            }
         });
 
     } else if (isFunction(node)) {
@@ -61,8 +70,11 @@ function createScopes(node, parent) {
             }
         }
 
+        let paramName;
         node.params.forEach(function(param) {
-            node.$scope.add(param.name, "param", param, null);
+            // Args default value (es6)
+            paramName = param.left ? param.left.name : param.name;
+            node.$scope.add(paramName, "param", param, null);
         });
 
     } else if (isForWithConstLet(node) || isForInOfWithConstLet(node)) {

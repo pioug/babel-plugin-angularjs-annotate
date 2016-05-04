@@ -39,7 +39,11 @@ const optimist = require("optimist")
         describe: "use single quotes (') instead of double quotes (\")",
     })
     .options("regexp", {
-        describe: "detect short form myMod.controller(...) iff myMod matches regexp",
+        describe: "detect short form myMod.controller(...) if myMod matches regexp",
+    })
+    .options("es6", {
+        boolean: true,
+        describe: "enable es6 compatibility",
     })
     .options("rename", {
         describe: "rename declarations and annotated references\n" +
@@ -132,7 +136,7 @@ function runAnnotate(err, src) {
         config.inFile = filename;
     }
 
-    ["add", "remove", "o", "regexp", "rename", "single_quotes", "plugin", "enable", "stats"].forEach(function(opt) {
+    ["add", "remove", "o", "regexp", "es6", "rename", "single_quotes", "plugin", "enable", "stats"].forEach(function(opt) {
         if (opt in argv) {
             config[opt] = argv[opt];
         }
