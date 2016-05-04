@@ -14,7 +14,7 @@ module.exports = {
 function inspectNode(node, ctx) {
     if (node.type === "CallExpression") {
         inspectCallExpression(node, ctx);
-    } else if (node.type === "FunctionExpression" || node.type === "FunctionDeclaration") {
+    } else if (node.type === "FunctionExpression" || node.type === "ArrowFunctionExpression" || node.type === "FunctionDeclaration") {
         inspectFunction(node, ctx);
     }
 }
@@ -80,6 +80,11 @@ function inspectFunction(node, ctx) {
 
 function matchPrologueDirectives(prologueDirectives, node) {
     const body = node.body.body;
+
+    // There is no body when not using curly brace, such as x => x
+    if (!body) {
+        return;
+    }
 
     let found = null;
     for (let i = 0; i < body.length; i++) {
@@ -195,7 +200,7 @@ function nestedObjectValues(node, res) {
 
     node.properties.forEach(function(prop) {
         const v = prop.value;
-        if (is.someof(v.type, ["FunctionExpression", "ArrayExpression"])) {
+        if (is.someof(v.type, ["FunctionExpression", "ArrowFunctionExpression", "ArrayExpression"])) {
             res.push(v);
         } else if (v.type === "ObjectExpression") {
             nestedObjectValues(v, res);

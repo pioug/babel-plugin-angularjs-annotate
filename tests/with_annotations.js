@@ -1059,3 +1059,13 @@ var MyCtrl = (function() {
 })();
 
 myMod.service("a", MyCtrl);
+
+var ArrowFnCtrl = ($scope) => {
+    "ngInject"
+    return $scope
+}
+ArrowFnCtrl.$inject = ["$scope"];
+
+var ArrowFnCtrl = /*@ngInject*/["$scope", ($scope) => { $scope }]
+
+var ArrowFnCtrl = /*@ngInject*/["$filter", ($filter) => $filter]
